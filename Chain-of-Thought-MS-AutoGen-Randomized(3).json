@@ -1,0 +1,442 @@
+{
+    "extra": [
+        {
+            "db_id": "scholar",
+            "hardness": "extra",
+            "question": "When was Michael Stonebraker GIS Database published ?",
+            "query": "SELECT DISTINCT t3.year FROM paperkeyphrase AS t2 JOIN keyphrase AS t5 ON t2.keyphraseid  =  t5.keyphraseid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN writes AS t4 ON t4.paperid  =  t3.paperid JOIN author AS t1 ON t4.authorid  =  t1.authorid WHERE t1.authorname  =  \"Michael Stonebraker\" AND t5.keyphrasename  =  \"GIS Database\";",
+            "tables": [
+                "author",
+                "writes",
+                "paper",
+                "paperkeyphrase",
+                "keyphrase"
+            ],
+            "columns": [
+                [
+                    "year",
+                    "paperkeyphrase"
+                ],
+                [
+                    "keyphraseid",
+                    "paperkeyphrase"
+                ],
+                [
+                    "keyphraseid",
+                    "keyphrase"
+                ],
+                [
+                    "paperid",
+                    "paper"
+                ],
+                [
+                    "paperid",
+                    "paperkeyphrase"
+                ],
+                [
+                    "paperid",
+                    "writes"
+                ],
+                [
+                    "paperid",
+                    "paper"
+                ],
+                [
+                    "authorid",
+                    "writes"
+                ],
+                [
+                    "authorid",
+                    "author"
+                ],
+                [
+                    "authorname",
+                    "author"
+                ],
+                [
+                    "keyphrasename",
+                    "keyphrase"
+                ]
+            ],
+            "correctedCols": "[('year', 'paperkeyphrase'), ('keyphraseid', 'paperkeyphrase'), ('keyphraseid', 'keyphrase'), ('paperid', 'paper'), ('paperid', 'paperkeyphrase'), ('paperid', 'writes'), ('authorid', 'writes'), ('authorid', 'author'), ('authorname', 'author'), ('keyphrasename', 'keyphrase')]",
+            "objective": "When was the GIS Database by Michael Stonebraker published?",
+            "query_decomposition": "1. Retrieve the authorId for the author named \"Michael Stonebraker\":\n```sql\nSELECT authorId \nFROM author \nWHERE LOWER(authorName) = 'michael stonebraker';\n```\n\n2. Retrieve the keyphraseId for the keyphrase named \"GIS Database\":\n```sql\nSELECT keyphraseId \nFROM keyphrase \nWHERE LOWER(keyphraseName) = 'gis database';\n```\n\n3. Retrieve the paperId for papers (paper table) written (writes table) by Michael Stonebraker (author table) related to the keyphrase (paperkeyphrase table) \"GIS Database\":\n```sql\nSelect * FROM paperkeyphrase AS t2 JOIN keyphrase AS t5 ON t2.keyphraseid  =  t5.keyphraseid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN writes AS t4 ON t4.paperid  =  t3.paperid JOIN author AS t1 ON t4.authorid  =  t1.authorid WHERE LOWER(t1.authorname)  =  \"michael stonebraker\" AND LOWER(t5.keyphrasename)  =  \"gis database\";\n```\n\n4. Retrieve the publication year of the papers (paper table) related to the keyphrase \"GIS Database\" written by Michael Stonebraker:\n```sql\nSELECT DISTINCT t3.year FROM paperkeyphrase AS t2 JOIN keyphrase AS t5 ON t2.keyphraseid  =  t5.keyphraseid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN writes AS t4 ON t4.paperid  =  t3.paperid JOIN author AS t1 ON t4.authorid  =  t1.authorid WHERE LOWER(t1.authorname)  =  \"michael stonebraker\" AND LOWER(t5.keyphrasename)  =  \"gis database\";\n```\n\n\\*Final Query:*\\\n```sql\nSELECT DISTINCT t3.year FROM paperkeyphrase AS t2 JOIN keyphrase AS t5 ON t2.keyphraseid  =  t5.keyphraseid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN writes AS t4 ON t4.paperid  =  t3.paperid JOIN author AS t1 ON t4.authorid  =  t1.authorid WHERE LOWER(t1.authorname)  =  \"michael stonebraker\" AND LOWER(t5.keyphrasename)  =  \"gis database\";```"
+        },
+        {
+            "db_id": "restaurants",
+            "hardness": "extra",
+            "question": "What is the best restaurant in san francisco for french food ?",
+            "query": "SELECT t2.house_number  ,  t1.name FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"san francisco\" AND t1.food_type  =  \"french\" AND t1.rating  =  ( SELECT MAX ( t1.rating ) FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"san francisco\" AND t1.food_type  =  \"french\" );",
+            "tables": [
+                "LOCATION",
+                "restaurant"
+            ],
+            "columns": [
+                [
+                    "house_number",
+                    "LOCATION"
+                ],
+                [
+                    "name",
+                    "restaurant"
+                ],
+                [
+                    "id",
+                    "restaurant"
+                ],
+                [
+                    "restaurant_id",
+                    "LOCATION"
+                ],
+                [
+                    "city_name",
+                    "LOCATION"
+                ],
+                [
+                    "food_type",
+                    "restaurant"
+                ],
+                [
+                    "rating",
+                    "restaurant"
+                ],
+                [
+                    "rating",
+                    "restaurant"
+                ],
+                [
+                    "id",
+                    "restaurant"
+                ],
+                [
+                    "restaurant_id",
+                    "LOCATION"
+                ],
+                [
+                    "city_name",
+                    "LOCATION"
+                ],
+                [
+                    "food_type",
+                    "restaurant"
+                ]
+            ],
+            "correctedCols": "[('house_number', 'LOCATION'), ('name', 'restaurant'), ('id', 'restaurant'), ('restaurant_id', 'LOCATION'), ('city_name', 'LOCATION'), ('food_type', 'restaurant'), ('rating', 'restaurant')]",
+            "objective": "Which restaurant in San Francisco offers the highest-rated French cuisine based on the provided schema?",
+            "query_decomposition": "1. We can find the city name stored in LOCATION Table and the table contains information such as restaurant_id to indicate the property is a restaurant and can be used as a foreign key to join the restaurant Table.  Hence, to retrieve the restaurant in san francisco for french food, we can use query:\n ```sql\nSELECT t2.house_number  ,  t1.name FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"san francisco\" AND t1.food_type  =  \"french\"\n```\n 2. We want to find the best restaurant retrieved in the first step, we need to find the restaurant with the highest rating: ```sql\nSELECT t2.house_number  ,  t1.name FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"san francisco\" AND t1.food_type  =  \"french\" AND t1.rating  =  ( SELECT MAX ( t1.rating ) FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"san francisco\" AND t1.food_type  =  \"french\" );\n```\n \\*Final query:*\\ ```sql\nSELECT t2.house_number  ,  t1.name FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"san francisco\" AND t1.food_type  =  \"french\" AND t1.rating  =  ( SELECT MAX ( t1.rating ) FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"san francisco\" AND t1.food_type  =  \"french\" );\n```"
+        },
+        {
+            "db_id": "geo",
+            "hardness": "extra",
+            "question": "what is the city in wyoming with the largest population",
+            "query": "SELECT city_name FROM city WHERE population  =  ( SELECT MAX ( population ) FROM city WHERE state_name  =  \"wyoming\" ) AND state_name  =  \"wyoming\";",
+            "tables": [
+                "city"
+            ],
+            "columns": [
+                [
+                    "city_name",
+                    "city"
+                ],
+                [
+                    "population",
+                    "city"
+                ],
+                [
+                    "state_name",
+                    "city"
+                ]
+            ],
+            "correctedCols": "[('city_name', 'city'), ('population', 'city'), ('state_name', 'city')]",
+            "objective": "Which city in the state of Wyoming has the highest population based on the available data in the database?",
+            "query_decomposition": "1. Retrieve the city_name from the city table ```sql\nSELECT city_name FROM city\n``` \n2. Filter the cities based on the population being equal to the maximum population in Wyoming ```sql\nSELECT city_name FROM city WHERE population  =  ( SELECT MAX ( population ) FROM city WHERE state_name  =  \"wyoming\" )\n``` \n3. Ensure the final retrieved city with state_name \"wyoming\"} ```sql\nSELECT city_name FROM city WHERE population  =  ( SELECT MAX ( population ) FROM city WHERE state_name  =  \"wyoming\" ) AND state_name  =  \"wyoming\";\n```\\*Final query*\\: ```sql\nSELECT city_name FROM city WHERE population  =  ( SELECT MAX ( population ) FROM city WHERE state_name  =  \"wyoming\" ) AND state_name  =  \"wyoming\";\n```"
+        }
+    ],
+    "hard": [
+        {
+            "db_id": "geo",
+            "hardness": "hard",
+            "question": "what is the longest river in the united states",
+            "query": "SELECT river_name FROM river WHERE LENGTH  =  ( SELECT MAX ( LENGTH ) FROM river );",
+            "tables": [
+                "river"
+            ],
+            "columns": [
+                [
+                    "river_name",
+                    "river"
+                ],
+                [
+                    "LENGTH",
+                    "river"
+                ]
+            ],
+            "correctedCols": "[('river_name', 'river'), ('length', 'river')]",
+            "objective": "What is the name of the longest river that traverses through any state in the United States?",
+            "query_decomposition": "1. Retrieve the river_name from river table: ```sql\nSELECT river_name FROM river\n```\n2. Retrieve the river with the maximum length:\n```sql\nSELECT river_name FROM river WHERE LENGTH  =  ( SELECT MAX ( LENGTH ) FROM river );\n```\n\\*Final Query*\\\n```sql\nSELECT river_name FROM river WHERE length = (SELECT MAX(length) FROM river);\n```"
+        },
+        {
+            "db_id": "imdb",
+            "hardness": "hard",
+            "question": "Who acted \" Alan Turing \" in the movie \" The Imitation Game \" ?",
+            "query": "SELECT t1.name FROM CAST AS t2 JOIN actor AS t1 ON t2.aid  =  t1.aid JOIN movie AS t3 ON t3.mid  =  t2.msid WHERE t2.role  =  \"Alan Turing\" AND t3.title  =  \"The Imitation Game\";",
+            "tables": [
+                "movie",
+                "CAST",
+                "actor"
+            ],
+            "columns": [
+                [
+                    "name",
+                    "actor"
+                ],
+                [
+                    "aid",
+                    "CAST"
+                ],
+                [
+                    "aid",
+                    "actor"
+                ],
+                [
+                    "mid",
+                    "movie"
+                ],
+                [
+                    "msid",
+                    "CAST"
+                ],
+                [
+                    "role",
+                    "CAST"
+                ],
+                [
+                    "title",
+                    "movie"
+                ]
+            ],
+            "correctedCols": "[('name', 'actor'), ('aid', 'CAST'), ('aid', 'actor'), ('mid', 'movie'), ('msid', 'CAST'), ('role', 'CAST'), ('title', 'movie')]",
+            "objective": "Which actor portrayed the character of \"Alan Turing\" in the movie \"The Imitation Game\"?",
+            "query_decomposition": "1.To find the actors who played \"Alan Turing\", we need to join the CAST and actor tables to obtain cast details about the actors involved in a specific film.\n```sql\nSELECT t1.name FROM CAST AS t2 JOIN actor AS t1 ON t2.aid  =  t1.aid\n```\n2. To find the character of \"Alan Turing\" in the movie \"The Imitation Game\", we need to join CAST table with movie table, since we only have mid not movie title stored in CAST table: ```sql\nSELECT t1.name FROM CAST AS t2 JOIN actor AS t1 ON t2.aid  =  t1.aid JOIN movie AS t3 ON t3.mid  =  t2.msid WHERE t2.role  =  \"Alan Turing\" AND t3.title  =  \"The Imitation Game\";\n```\n\\*Final case-insensitive query:*\\ \n```sql\nSELECT t1.name \nFROM cast AS t2 \nJOIN actor AS t1 ON t2.aid = t1.aid \nJOIN movie AS t3 ON t3.mid = t2.msid \nWHERE LOWER(t2.role) = 'alan turing' \nAND LOWER(t3.title) = 'the imitation game';\n```"
+        },
+        {
+            "db_id": "restaurants",
+            "hardness": "hard",
+            "question": "where are some restaurants good for french food in the yosemite and mono lake area ?",
+            "query": "SELECT t3.house_number  ,  t1.name FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name  =  t2.city_name JOIN LOCATION AS t3 ON t1.id  =  t3.restaurant_id WHERE t2.region  =  \"yosemite and mono lake area\" AND t1.food_type  =  \"french\" AND t1.rating  >  2.5;",
+            "tables": [
+                "geographic",
+                "restaurant",
+                "LOCATION"
+            ],
+            "columns": [
+                [
+                    "house_number",
+                    "LOCATION"
+                ],
+                [
+                    "name",
+                    "restaurant"
+                ],
+                [
+                    "city_name",
+                    "restaurant"
+                ],
+                [
+                    "city_name",
+                    "geographic"
+                ],
+                [
+                    "id",
+                    "restaurant"
+                ],
+                [
+                    "restaurant_id",
+                    "LOCATION"
+                ],
+                [
+                    "region",
+                    "geographic"
+                ],
+                [
+                    "food_type",
+                    "restaurant"
+                ],
+                [
+                    "rating",
+                    "restaurant"
+                ]
+            ],
+            "correctedCols": "[('house_number', 'LOCATION'), ('name', 'restaurant'), ('city_name', 'restaurant'), ('city_name', 'geographic'), ('id', 'restaurant'), ('restaurant_id', 'LOCATION'), ('region', 'geographic'), ('food_type', 'restaurant'), ('rating', 'restaurant')]",
+            "objective": "Which restaurants in the Yosemite and Mono Lake area offer French cuisine and have received ratings above the average (2.5)?",
+            "query_decomposition": "1. LOCATION Table stores city name but not region name, \"yosemite and mono lake area\" is a region name, so to find restaurants in this region, we join the restaurant with both geographic Table and LOCATION Table. ```sqlSELECT t3.house_number  ,  t1.name FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name  =  t2.city_name JOIN LOCATION AS t3 ON t1.id  =  t3.restaurant_id WHERE t2.region  =  \"yosemite and mono lake area\"\n```\n2.To find some restaurants good for french food, \"good\" is usually defined as above average, so we want to find the restaurants with rating higher than 2.5.\n```sql\nSELECT t3.house_number  ,  t1.name FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name  =  t2.city_name JOIN LOCATION AS t3 ON t1.id  =  t3.restaurant_id WHERE t2.region  =  \"yosemite and mono lake area\" AND t1.food_type  =  \"french\" AND t1.rating  >  2.5;\n```\n\\*Final case-insensitive query:*\\\n```sql\nSELECT t3.house_number  ,  t1.name FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name  =  t2.city_name JOIN LOCATION AS t3 ON t1.id  =  t3.restaurant_id WHERE t2.region  =  \"yosemite and mono lake area\" AND t1.food_type  =  \"french\" AND t1.rating  >  2.5;\n```."
+        }
+    ],
+    "easy": [
+        {
+            "db_id": "geo",
+            "hardness": "easy",
+            "question": "which rivers are in illinois",
+            "query": "SELECT river_name FROM river WHERE traverse  =  \"illinois\";",
+            "tables": [
+                "river"
+            ],
+            "columns": [
+                [
+                    "river_name",
+                    "river"
+                ],
+                [
+                    "traverse",
+                    "river"
+                ]
+            ],
+            "correctedCols": "[('river_name', 'river'), ('traverse', 'river')]",
+            "objective": "Which rivers traverse the state of Illinois?",
+            "query_decomposition": "{Identify the table containing river information} \n```sql\n SELECT river_name \nFROM river \nWHERE LOWER(traverse) = 'illinois';\n```\n\\*Final query:*\\```sql\n SELECT river_name \nFROM river \nWHERE LOWER(traverse) = 'illinois';\n```"
+        },
+        {
+            "db_id": "imdb",
+            "hardness": "easy",
+            "question": "Where is the birth place of \" Kevin Spacey \"",
+            "query": "SELECT birth_city FROM director WHERE name  =  \"director_name0\";",
+            "tables": [
+                "director"
+            ],
+            "columns": [
+                [
+                    "birth_city",
+                    "director"
+                ],
+                [
+                    "name",
+                    "director"
+                ]
+            ],
+            "correctedCols": "[('birth_city', 'director'), ('name', 'director')]",
+            "objective": "What is the birth city of the actor with the name \"Kevin Spacey\" in the database?",
+            "query_decomposition": "[{ \n  Find the director ID for the director named \"Kevin Spacey\": \n  ```sql\n  SELECT did \n  FROM director \n  WHERE LOWER(name) = 'kevin spacey';\n  ```\n}, \n{ \n  Find the birth place of \"Kevin Spacey\" using the director ID: \n  ```sql\n  SELECT birth_city \n  FROM director \n  WHERE did = (SELECT did FROM director WHERE LOWER(name) = 'kevin spacey');\n  ```\n}] \n\\*Final query:*\\\n \n```sql\nSELECT birth_city \nFROM director \nWHERE did = (SELECT did FROM director WHERE LOWER(name) = 'kevin spacey');\n```"
+        },
+        {
+            "db_id": "academic",
+            "hardness": "easy",
+            "question": "return me the homepage of \" H. V. Jagadish \" .",
+            "query": "SELECT homepage FROM author WHERE name  =  \"H. V. Jagadish\";",
+            "tables": [
+                "author"
+            ],
+            "columns": [
+                [
+                    "homepage",
+                    "author"
+                ],
+                [
+                    "name",
+                    "author"
+                ]
+            ],
+            "correctedCols": "[('homepage', 'author'), ('name', 'author')]",
+            "objective": "Please provide the homepage of the author with the name \"H. V. Jagadish\".",
+            "query_decomposition": "Author Table has homepage and name clomns, we can directly use the following query for the target question: \n```sql\nSELECT homepage FROM author WHERE name  =  \"H. V. Jagadish\";\n```\\*Final query:*\\\n ```sql\nSELECT homepage FROM author WHERE name  =  \"H. V. Jagadish\";\n```"
+        }
+    ],
+    "medium": [
+        {
+            "db_id": "restaurants",
+            "hardness": "medium",
+            "question": "how many places for french are there in palo alto ?",
+            "query": "SELECT COUNT ( * ) FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"palo alto\" AND t1.food_type  =  \"french\";",
+            "tables": [
+                "LOCATION",
+                "restaurant"
+            ],
+            "columns": [
+                [
+                    "id",
+                    "restaurant"
+                ],
+                [
+                    "restaurant_id",
+                    "LOCATION"
+                ],
+                [
+                    "city_name",
+                    "LOCATION"
+                ],
+                [
+                    "food_type",
+                    "restaurant"
+                ]
+            ],
+            "correctedCols": "[('id', 'restaurant'), ('restaurant_id', 'LOCATION'), ('city_name', 'LOCATION'), ('food_type', 'restaurant')]",
+            "objective": "How many restaurants in Palo Alto offer French cuisine?",
+            "query_decomposition": "1. We can find the city name stored in LOCATION Table and the table contains information such as restaurant_id to indicate the property is a restaurant and can be used as a foreign key to join the restaurant Table.  Hence, to retrieve the restaurant in san francisco for french food, we can use query:\n ```sql\nSELECT * from FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"palo alto\" AND t1.food_type  =  \"french\";\n``` 2.To find how many such restaurants, we need to use COUNT function: ```sql\nSELECT COUNT ( * ) FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"palo alto\" AND t1.food_type  =  \"french\";\n```\n\\*Final query:*\\\n```sql\nSELECT COUNT ( * ) FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"palo alto\" AND t1.food_type  =  \"french\";\n```"
+        },
+        {
+            "db_id": "yelp",
+            "hardness": "medium",
+            "question": "How many tips has Michelle written in April",
+            "query": "SELECT COUNT ( DISTINCT t1.text ) FROM USER AS t2 JOIN tip AS t1 ON t2.user_id  =  t1.user_id WHERE t1.month  =  \"April\" AND t2.name  =  \"Michelle\";",
+            "tables": [
+                "USER",
+                "tip"
+            ],
+            "columns": [
+                [
+                    "text",
+                    "tip"
+                ],
+                [
+                    "user_id",
+                    "USER"
+                ],
+                [
+                    "user_id",
+                    "tip"
+                ],
+                [
+                    "month",
+                    "tip"
+                ],
+                [
+                    "name",
+                    "USER"
+                ]
+            ],
+            "correctedCols": "[('text', 'tip'), ('user_id', 'USER'), ('user_id', 'tip'), ('month', 'tip'), ('name', 'USER')]",
+            "objective": "How many tips has the user named Michelle written in the month of April?",
+            "query_decomposition": "1.First, we find a user named \"Michelle\":\n```sql\nSelect * FROM USER WHERE name =  \"Michelle\"\n```\n2. Next, we filter the tips written in April:\n```sql\nSelect * from tip WHERE month = \"April\"\n```\n3. Finally, we combine the two queries by joining the USER and tip tables by user_id and count the number of such unreplicated tips:\n```sql\nSELECT COUNT ( DISTINCT t1.text ) FROM USER AS t2 JOIN tip AS t1 ON t2.user_id  =  t1.user_id WHERE LOWER(t1.month)  =  \"april\" AND LOWER(t2.name)  =  \"michelle\";\n```\n\\*Final query:*\\\n```sql\nSELECT COUNT ( DISTINCT t1.text ) FROM USER AS t2 JOIN tip AS t1 ON t2.user_id  =  t1.user_id WHERE LOWER(t1.month)  =  \"april\" AND LOWER(t2.name)  =  \"michelle\";\n```"
+        },
+        {
+            "db_id": "scholar",
+            "hardness": "medium",
+            "question": "How many papers has Christopher D. Manning published ?",
+            "query": "SELECT DISTINCT COUNT ( DISTINCT t2.paperid ) FROM writes AS t2 JOIN author AS t1 ON t2.authorid  =  t1.authorid WHERE t1.authorname  =  \"Christopher D. Manning\";",
+            "tables": [
+                "author",
+                "writes"
+            ],
+            "columns": [
+                [
+                    "paperid",
+                    "writes"
+                ],
+                [
+                    "authorid",
+                    "writes"
+                ],
+                [
+                    "authorid",
+                    "author"
+                ],
+                [
+                    "authorname",
+                    "author"
+                ]
+            ],
+            "correctedCols": "[('paperid', 'writes'), ('authorid', 'writes'), ('authorid', 'author'), ('authorname', 'author')]",
+            "objective": "How many papers has the author Christopher D. Manning published in the database?",
+            "query_decomposition": "[{Step 1: Identify the authorId for \"Christopher D. Manning\"} \nSELECT authorId \nFROM author \nWHERE authorName = 'Christopher D. Manning'] \n[{Step 2: Find the papers published by Christopher D. Manning using the authorId] \nSELECT COUNT(DISTINCT paperId) \nFROM writes \nWHERE authorId = <authorId from Step 1>] \n\\*Final Query:*\\ \n```sql\nSELECT DISTINCT COUNT ( DISTINCT t2.paperid ) FROM writes AS t2 JOIN author AS t1 ON t2.authorid  =  t1.authorid WHERE t1.authorname  =  \"Christopher D. Manning\";\n```"
+        }
+    ]
+}
