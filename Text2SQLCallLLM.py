@@ -40,7 +40,7 @@ def extract_schema_from_sql_file(file_path):
 
 def get_schema_demonstration(db_name):
 
-    db_path = f'/Users/keshen/Documents/ISI/NL2Query/dataset/spider/database/{db_name}/{db_name}.sqlite'
+    db_path = f'NL2Query/dataset/spider/database/{db_name}/{db_name}.sqlite'
     schema = process_sql.Schema(process_sql.get_schema(db_path))
     # print(schema.idMap)
     return schema.idMap
