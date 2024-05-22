@@ -684,7 +684,7 @@ def eval_exec_match(db, p_str, g_str, pred, gold, question, db_id, hardness, idx
             'gpt_result': p_res
         }
         json_object = json.dumps(logs, indent=4)
-        with open(f'/Users/keshen/PycharmProjects/sk/ISI/NL2SQL/{hardness}_logs.json', 'a+') as file:
+        with open(f'NL2SQL/{hardness}_logs.json', 'a+') as file:
             file.write(json_object)
     
     return (set(frozenset(str(item)) for item in p_res1) == set(frozenset(str(item)) for item in q_res1) ) or (set(frozenset(str(item)) for item in p_res2) == set(frozenset(str(item)) for item in q_res2) )
