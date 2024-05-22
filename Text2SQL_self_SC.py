@@ -80,7 +80,7 @@ def ProvideDataPoints(query_dict, dataPoint_dict):
         qd['gpt_response_corrected'] = res
         Response.append(qd)
     json_object = json.dumps(Response, indent=4)
-    with open(f'/Users/keshen/PycharmProjects/sk/ISI/NL2SQL/response/Generate_with_datapoints/AutoSelected-CoT-One-Shot/{hardness}_gpt_response_.json', 'w') as file:
+    with open(f'response/Generate_with_datapoints/AutoSelected-CoT-One-Shot/{hardness}_gpt_response_.json', 'w') as file:
         file.write(json_object)
 
 def CodeRepresentation(dev_dict):
